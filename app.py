@@ -4,6 +4,7 @@ import secrets
 from db import db
 import models
 import os
+from dotenv import load_dotenv
 from flask_migrate import Migrate
 import models
 from flask_smorest import Api 
@@ -18,6 +19,7 @@ from resources.user import blp as UserBlueprint
 
 def create_app(db_url=None):
     app = Flask(__name__)
+    load_dotenv()
 
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Stores REST API"
