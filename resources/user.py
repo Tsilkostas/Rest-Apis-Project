@@ -3,6 +3,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from flask import current_app
 from sqlalchemy import or_
+import os
 from passlib.hash import pbkdf2_sha256
 from flask_jwt_extended import (
     create_access_token,
@@ -16,10 +17,18 @@ from models import UserModel
 from schemas import UserSchema, UserRegisterSchema
 from blocklist import BLOCKLIST
 from tasks import send_user_registration_email
+import redis
+from rq import Queue
+from tasks import send_user_registration_email
 
 
 
 blp = Blueprint("Users", "users", description="Operations on users")
+
+connection = redis.from_url(
+    os.getenv("REDIS_URL")
+)  # Get this from Render.com or run in Docker
+queue = Queue("emails", connection=connection)
 
  
 @blp.route("/logout")
